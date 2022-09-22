@@ -1,5 +1,11 @@
 version: 0.2
 
+env:
+  shell: bash
+  variables:
+    AWS_ACCOUNT_ID: '784074879813'
+    IMAGE_REPO_NAME: 'nae-user-managmement-api'
+
 phases:
   install:
     runtime-versions:
@@ -17,4 +23,12 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - echo "Building API with CDK"
+      - echo "Building Docker Image"
+      - docker build -t $IMAGE_REPO_NAME:Nae3x-$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker tag $IMAGE_REPO_NAME:Nae3x-$CODEBUILD_RESOLVED_SOURCE_VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:Nae3x-$CODEBUILD_RESOLVED_SOURCE_VERSION
+
+  post_build:
+    on-failure: ABORT
+    commands:
+      - echo "Pushing image to ECR"
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:Nae3x-$CODEBUILD_RESOLVED_SOURCE_VERSION
