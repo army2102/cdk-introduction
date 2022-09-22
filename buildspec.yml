@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - echo "Installing CI/CD dependencies"
+      - npm ci
+
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - echo "Running Tests"
+      - npm run test
+
+  build:
+    on-failure: ABORT
+    commands:
+      - echo "Building API with CDK"
