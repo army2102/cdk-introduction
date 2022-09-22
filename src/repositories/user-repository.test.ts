@@ -1,54 +1,55 @@
-import { ExistedUsernameError } from "@/commons/error";
-import { User } from "@/entities/user-entity";
-import UserRepository from "@/repositories/user-repository";
+import { ExistedUsernameError } from '@/commons/error'
+import User from '@/entities/user-entity'
+import UserRepository from '@/repositories/user-repository'
 
 describe('UserUseCase', () => {
-    describe('getAll()', () => {
-        it('should return list of user', async () => {
-            const userList = [new User('best', 'besuto', '123456', new Date('2022-01-01'))];
-            const userRepository = new UserRepository();
-            await userRepository.create(userList[0]);
+  describe('getAll()', () => {
+    it('should return list of user', async () => {
+      const userList = [
+        new User('best', 'besuto', '123456', new Date('2022-01-01'))
+      ]
+      const userRepository = new UserRepository()
+      await userRepository.create(userList[0])
 
-            const result = await userRepository.getAll();
-            
-            const expected = userList;
-            expect(result).toStrictEqual(expected);
-        });
-    });
+      const result = await userRepository.getAll()
 
-    describe('create()', () => {
-        it('should create new user if user does not exist', async () => {
-            const user = new User('best', 'besuto', '123456', new Date('2022-01-01'));
-            const userRepository = new UserRepository();
+      const expected = userList
+      expect(result).toStrictEqual(expected)
+    })
+  })
 
-            const result = await userRepository.create(user);
+  describe('create()', () => {
+    it('should create new user if user does not exist', async () => {
+      const user = new User('best', 'besuto', '123456', new Date('2022-01-01'))
+      const userRepository = new UserRepository()
 
-            const expected = user;
-            expect(result.id).not.toBeUndefined();
-            expect(result.username).toStrictEqual(expected.username);
-        });
+      const result = await userRepository.create(user)
 
-        it('should throw error if useranme is already exist', async () => {
-            const user = new User('best', 'besuto', '123456', new Date('2022-01-01'));
-            const userRepository = new UserRepository();
-            await userRepository.create(user);
-            
-            expect(userRepository.create(user)).rejects.toThrow(ExistedUsernameError);
-        })
-    });
+      const expected = user
+      expect(result.id).not.toBeUndefined()
+      expect(result.username).toStrictEqual(expected.username)
+    })
 
-    describe('deleteAll()', () => {
-        it('should delete user', async () => {
-            const user = new User('best', 'besuto', '123456', new Date('2022-01-01'));
-            const userRepository = new UserRepository();
-            await userRepository.create(user);
+    it('should throw error if useranme is already exist', async () => {
+      const user = new User('best', 'besuto', '123456', new Date('2022-01-01'))
+      const userRepository = new UserRepository()
+      await userRepository.create(user)
 
-            await userRepository.deleteAll();
+      expect(userRepository.create(user)).rejects.toThrow(ExistedUsernameError)
+    })
+  })
 
-            const result = await userRepository.getAll();
+  describe('deleteAll()', () => {
+    it('should delete user', async () => {
+      const user = new User('best', 'besuto', '123456', new Date('2022-01-01'))
+      const userRepository = new UserRepository()
+      await userRepository.create(user)
 
-            expect(result.length).toStrictEqual(0);
-        })
-    });
+      await userRepository.deleteAll()
 
-});
+      const result = await userRepository.getAll()
+
+      expect(result.length).toStrictEqual(0)
+    })
+  })
+})
