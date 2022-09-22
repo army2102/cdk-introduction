@@ -12,12 +12,9 @@ COPY src ./src
 COPY tsconfig*.json ./
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs:16 AS runner
+FROM public.ecr.aws/lambda/nodejs:16
 ARG SERVER_ENV
 ENV NODE_ENV ${SERVER_ENV}
-WORKDIR /app
-# TODO: Remove this when implement CI/CD
-COPY .env ./ 
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-CMD ["dist/index.js"]
+COPY --from=builder /app/dist ./
+CMD ["index.lambdaHandler"]

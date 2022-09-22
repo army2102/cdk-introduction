@@ -58,6 +58,7 @@
     "fastify": "^4.2.1",
     "fastify-jwt": "^4.2.0",
     "reflect-metadata": "^0.1.13",
+    "serverless-http": "^3.0.2",
     "typedi": "^0.10.0"
   }
 }
